@@ -1,0 +1,11 @@
+pipeline {
+    stages {
+        stage('Run') {
+            steps {
+                sh "${SCRIPTS_DIR}/prereqs.sh"
+                sh 'uv sync && mkdir -p test-reports'
+                sh "oc project ${params.PROJECT_NAME}"
+            }
+        }
+    }
+}

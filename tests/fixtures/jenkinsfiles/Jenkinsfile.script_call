@@ -1,0 +1,18 @@
+pipeline {
+    stages {
+        stage('Discover') {
+            steps {
+                script {
+                    def llmIsvc = sh(script: """#!/bin/bash
+                        set -euo pipefail
+                        NAMES=\$(oc get llminferenceservice -n llm -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || echo "")
+                        for n in \$NAMES; do
+                            case "\$n" in *embedding*) continue ;; *) echo "\$n"; exit 0 ;; esac
+                        done
+                    """, returnStdout: true).trim()
+                    def status = sh(script: "oc get pods -n test 2>/dev/null || true", returnStatus: true)
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+pipeline {
+    stages {
+        stage('Run') {
+            steps {
+                trackedSh('prereqs', "${SCRIPTS_DIR}/prereqs.sh")
+                trackedSh('run-tests', "${SCRIPTS_DIR}/run-tests.sh")
+            }
+        }
+    }
+}

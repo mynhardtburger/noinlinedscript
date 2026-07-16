@@ -1,0 +1,15 @@
+pipeline {
+    stages {
+        stage('Mirror') {
+            steps {
+                sh '''
+                    set +x
+                    scripts/prereqs.sh
+                    scripts/oc-login.sh
+                    EXTRA_IMAGES_FILE=scripts/mirror-extra-images.txt \
+                    scripts/mirror-rhoai-images.sh ''' + cleanFlag + '''
+                '''
+            }
+        }
+    }
+}

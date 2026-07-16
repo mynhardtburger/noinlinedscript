@@ -1,0 +1,14 @@
+pipeline {
+    stages {
+        stage('Detect') {
+            steps {
+                script {
+                    env.OCP_VERSION = sh(script: '''
+                        oc version -o json 2>/dev/null \
+                            | python3 -c "import json,sys; print(json.load(sys.stdin)['openshiftVersion'].rsplit('.',1)[0])"
+                    ''', returnStdout: true).trim()
+                }
+            }
+        }
+    }
+}

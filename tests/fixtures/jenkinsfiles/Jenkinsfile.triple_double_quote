@@ -1,0 +1,18 @@
+pipeline {
+    stages {
+        stage('Setup') {
+            steps {
+                sh """#!/bin/bash
+                    set -e
+                    PROJECT="${params.PROJECT_NAME}"
+                    echo "Setting up \${PROJECT}"
+                    oc new-project "\${PROJECT}" 2>/dev/null || oc project "\${PROJECT}"
+                    for i in \$(seq 1 10); do
+                        echo "  Waiting... \$i"
+                        sleep 5
+                    done
+                """
+            }
+        }
+    }
+}
