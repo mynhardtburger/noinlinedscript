@@ -22,20 +22,17 @@ class ToolConfig:
     json_output: bool = False
     verbose: bool = False
     warn: bool = False
+    no_summary: bool = False
 
     def is_allowed(self, file_path: str, start_line: int) -> bool:
         for entry in self.allowlist:
-            if fnmatch(file_path, entry.file) or file_path.endswith(entry.file):
-                if entry.line is None or entry.line == start_line:
-                    return True
+            if (fnmatch(file_path, entry.file) or file_path.endswith(entry.file)) and (entry.line is None or entry.line == start_line):
+                return True
         return False
 
 
 def load_config(config_path: str | None = None) -> ToolConfig:
-    if config_path:
-        path = Path(config_path)
-    else:
-        path = _find_pyproject()
+    path = Path(config_path) if config_path else _find_pyproject()
 
     if path is None or not path.exists():
         return ToolConfig()
@@ -56,11 +53,13 @@ def load_config(config_path: str | None = None) -> ToolConfig:
         config.exclude_patterns = list(tool_data["exclude_patterns"])
 
     for entry_data in tool_data.get("allowlist", []):
-        config.allowlist.append(AllowlistEntry(
-            file=entry_data["file"],
-            line=entry_data.get("line"),
-            reason=entry_data.get("reason", ""),
-        ))
+        config.allowlist.append(
+            AllowlistEntry(
+                file=entry_data["file"],
+                line=entry_data.get("line"),
+                reason=entry_data.get("reason", ""),
+            )
+        )
 
     return config
 

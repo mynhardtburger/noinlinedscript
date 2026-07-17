@@ -62,15 +62,10 @@ def parse_jenkinsfile(file_path: str) -> list[InlineBlock]:
     return blocks
 
 
-def _try_triple_quote(
-    lines: list[str], start: int, file_path: str, quote: str, style: ShBlockStyle
-) -> tuple[InlineBlock, int] | None:
+def _try_triple_quote(lines: list[str], start: int, file_path: str, quote: str, style: ShBlockStyle) -> tuple[InlineBlock, int] | None:
     line = lines[start]
 
-    if quote == "'''":
-        pattern = _SH_TRIPLE_SINGLE
-    else:
-        pattern = _SH_TRIPLE_DOUBLE
+    pattern = _SH_TRIPLE_SINGLE if quote == "'''" else _SH_TRIPLE_DOUBLE
 
     m = pattern.match(line)
     if not m:
@@ -126,9 +121,7 @@ def _is_concatenation(text: str) -> bool:
     return bool(re.match(r"""\s*\+\s*""", text.strip()))
 
 
-def _collect_concatenated(
-    lines: list[str], start: int, consumed: int, source_parts: list[str], quote: str
-) -> tuple[int, int] | None:
+def _collect_concatenated(lines: list[str], start: int, consumed: int, source_parts: list[str], quote: str) -> tuple[int, int] | None:
     j = start + consumed
     end_line = start + consumed - 1
     while j < len(lines):
@@ -193,9 +186,7 @@ def _try_script_call(lines: list[str], start: int, file_path: str) -> tuple[Inli
     return None
 
 
-def _extract_script_call_triple(
-    lines: list[str], start: int, file_path: str, quote: str, first_content: str
-) -> tuple[InlineBlock, int] | None:
+def _extract_script_call_triple(lines: list[str], start: int, file_path: str, quote: str, first_content: str) -> tuple[InlineBlock, int] | None:
     source_parts = []
     consumed = 1
 
@@ -229,9 +220,7 @@ def _extract_script_call_triple(
     ), consumed
 
 
-def _extract_script_call_single(
-    lines: list[str], start: int, file_path: str, quote_char: str, content: str
-) -> tuple[InlineBlock, int] | None:
+def _extract_script_call_single(lines: list[str], start: int, file_path: str, quote_char: str, content: str) -> tuple[InlineBlock, int] | None:
     closing = _find_unescaped_quote(content, quote_char)
     if closing is None:
         return None
@@ -284,7 +273,7 @@ def _try_single_line(lines: list[str], start: int, file_path: str) -> tuple[Inli
 def _find_unescaped_quote(text: str, quote_char: str) -> int | None:
     i = 0
     while i < len(text):
-        if text[i] == "\\" :
+        if text[i] == "\\":
             i += 2
             continue
         if text[i] == quote_char:

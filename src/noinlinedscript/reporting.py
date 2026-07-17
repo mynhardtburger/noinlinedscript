@@ -4,16 +4,13 @@ import json
 from pathlib import Path
 
 from noinlinedscript.config import ToolConfig
-from noinlinedscript.models import AnalyzedBlock, InlineLanguage
+from noinlinedscript.models import AnalyzedBlock
 
 
 def is_violation(block: AnalyzedBlock, config: ToolConfig) -> bool:
     if config.is_allowed(block.block.file_path, block.block.start_line):
         return False
-    return (
-        block.complexity.line_count > config.max_line_count
-        or block.complexity.complexity_score > config.max_complexity_score
-    )
+    return block.complexity.line_count > config.max_line_count or block.complexity.complexity_score > config.max_complexity_score
 
 
 def format_text(results: list[AnalyzedBlock], config: ToolConfig, verbose: bool = False) -> str:
@@ -30,10 +27,7 @@ def format_text(results: list[AnalyzedBlock], config: ToolConfig, verbose: bool 
         ctx = _context_label(item)
         style = b.block_style.value if b.block_style else "unknown"
 
-        if violation:
-            marker = "WARNING" if config.warn else "VIOLATION"
-        else:
-            marker = "ok"
+        marker = ("WARNING" if config.warn else "VIOLATION") if violation else "ok"
         lines.append(f"{rel_path}:{b.start_line}-{b.end_line}  [{ctx}]  {style}  ({marker})")
         lines.append(f"  Lines: {c.line_count}  Score: {c.complexity_score:.1f}")
 
@@ -76,10 +70,11 @@ def format_text(results: list[AnalyzedBlock], config: ToolConfig, verbose: bool 
 
         lines.append("")
 
-    total = len(results)
-    violation_count = len(violations)
-    lines.append(f"Summary: {total} inline blocks found, {violation_count} exceed thresholds")
-    lines.append(f"  Thresholds: max_line_count={config.max_line_count}, max_complexity_score={config.max_complexity_score}")
+    if not config.no_summary:
+        total = len(results)
+        violation_count = len(violations)
+        lines.append(f"Summary: {total} inline blocks found, {violation_count} exceed thresholds")
+        lines.append(f"  Thresholds: max_line_count={config.max_line_count}, max_complexity_score={config.max_complexity_score}")
 
     return "\n".join(lines)
 
@@ -133,18 +128,19 @@ def format_json(results: list[AnalyzedBlock], config: ToolConfig) -> str:
 
         blocks_data.append(block_data)
 
-    output = {
+    output: dict = {
         "blocks": blocks_data,
-        "summary": {
-            "total_blocks": len(results),
-            "violations": len(violations),
-        },
         "config": {
             "max_line_count": config.max_line_count,
             "max_complexity_score": config.max_complexity_score,
             "warn": config.warn,
         },
     }
+    if not config.no_summary:
+        output["summary"] = {
+            "total_blocks": len(results),
+            "violations": len(violations),
+        }
 
     return json.dumps(output, indent=2)
 

@@ -11,17 +11,37 @@ from noinlinedscript.models import (
     ShellFeatures,
 )
 
-KNOWN_EXTERNAL_COMMANDS = frozenset({
-    "oc", "kubectl", "kustomize", "helm",
-    "aws", "mc", "skopeo",
-    "jq", "yq",
-    "make", "go", "npm",
-    "curl", "wget",
-    "git", "sed", "awk", "grep", "find",
-    "base64", "openssl", "htpasswd",
-    "tar", "unzip", "zip",
-    "docker", "podman",
-})
+KNOWN_EXTERNAL_COMMANDS = frozenset(
+    {
+        "oc",
+        "kubectl",
+        "kustomize",
+        "helm",
+        "aws",
+        "mc",
+        "skopeo",
+        "jq",
+        "yq",
+        "make",
+        "go",
+        "npm",
+        "curl",
+        "wget",
+        "git",
+        "sed",
+        "awk",
+        "grep",
+        "find",
+        "base64",
+        "openssl",
+        "htpasswd",
+        "tar",
+        "unzip",
+        "zip",
+        "docker",
+        "podman",
+    }
+)
 
 
 def analyze_block(block: InlineBlock) -> AnalyzedBlock:

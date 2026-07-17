@@ -67,6 +67,7 @@ For local development without a remote repo:
 | `--warn`, `-w` | Report violations but always exit 0 (for transition periods) |
 | `--json` | JSON output instead of human-readable |
 | `--verbose`, `-v` | Show all blocks, not just violations |
+| `--no-summary` | Suppress the summary line |
 | `--max-lines N` | Override max line count threshold (default: 5) |
 | `--max-score N` | Override max complexity score threshold (default: 10.0) |
 | `--config PATH` | Path to config file (default: nearest `pyproject.toml`) |

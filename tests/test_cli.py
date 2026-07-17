@@ -57,6 +57,20 @@ class TestWarnMode:
         assert "ok" in captured.err
 
 
+class TestNoSummary:
+    def test_no_summary_suppresses_summary(self, jenkinsfile_fixtures, capsys):
+        main([str(jenkinsfile_fixtures / "Jenkinsfile.triple_double_quote"), "--no-summary"])
+        captured = capsys.readouterr()
+        assert "Summary:" not in captured.out
+
+    def test_no_summary_json(self, jenkinsfile_fixtures, capsys):
+        main([str(jenkinsfile_fixtures / "Jenkinsfile.triple_single_quote"), "--json", "--no-summary"])
+        captured = capsys.readouterr()
+        data = json.loads(captured.out)
+        assert "summary" not in data
+        assert "blocks" in data
+
+
 class TestFileDiscovery:
     def test_discovers_jenkinsfiles_and_sh(self, tmp_path, monkeypatch):
         (tmp_path / "Jenkinsfile.test").write_text("pipeline {}\n")

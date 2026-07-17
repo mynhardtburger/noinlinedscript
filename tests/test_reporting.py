@@ -66,7 +66,6 @@ class TestFormatText:
         text = format_text([result], config, verbose=True)
         assert "ok" in text
 
-
     def test_warn_mode_uses_warning_marker(self):
         source = "\n".join(f"echo line{i}" for i in range(10))
         result = _make_analyzed(source)

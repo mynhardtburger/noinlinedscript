@@ -1,5 +1,5 @@
 from noinlinedscript.analysis import analyze_block
-from noinlinedscript.models import EmbeddingContext, InlineBlock, InlineLanguage, ShBlockStyle, PythonEmbedStyle
+from noinlinedscript.models import EmbeddingContext, InlineBlock, InlineLanguage, PythonEmbedStyle, ShBlockStyle
 
 
 def _shell_block(source: str) -> InlineBlock:

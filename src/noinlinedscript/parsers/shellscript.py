@@ -58,9 +58,8 @@ def _find_python_invocation(line: str) -> int | None:
         after = line[m.end() :]
         if after.startswith(" -c ") or after.startswith(" -c'") or after.startswith(' -c"'):
             return start
-        if re.match(r"\s+-\s+", after) or re.match(r"\s+<<", after) or re.match(r"\s*$", after):
-            if re.search(r"<<-?\s*['\"]?\w+['\"]?", after):
-                return start
+        if (re.match(r"\s+-\s+", after) or re.match(r"\s+<<", after) or re.match(r"\s*$", after)) and re.search(r"<<-?\s*['\"]?\w+['\"]?", after):
+            return start
     return None
 
 
@@ -68,7 +67,14 @@ def _is_module_call(rest: str) -> bool:
     return bool(re.match(r"python3?\s+-m\b", rest))
 
 
-def _try_parse_dash_c(rest: str, lines: list[str], line_idx: int, file_path: str, context: EmbeddingContext, line_offset: int) -> tuple[InlineBlock, int] | None:
+def _try_parse_dash_c(
+    rest: str,
+    lines: list[str],
+    line_idx: int,
+    file_path: str,
+    context: EmbeddingContext,
+    line_offset: int,
+) -> tuple[InlineBlock, int] | None:
     m = re.match(r"python3?\s+-c\s+", rest)
     if not m:
         return None
@@ -127,7 +133,14 @@ def _find_closing_quote(text: str, quote_char: str) -> int | None:
     return None
 
 
-def _try_parse_heredoc(rest: str, lines: list[str], line_idx: int, file_path: str, context: EmbeddingContext, line_offset: int) -> tuple[InlineBlock, int] | None:
+def _try_parse_heredoc(
+    rest: str,
+    lines: list[str],
+    line_idx: int,
+    file_path: str,
+    context: EmbeddingContext,
+    line_offset: int,
+) -> tuple[InlineBlock, int] | None:
     m_python = re.match(r"python3?(\s+-\s+\S.*?)?\s*", rest)
     if not m_python:
         return None
