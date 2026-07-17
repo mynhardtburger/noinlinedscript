@@ -35,6 +35,22 @@ noinlinedscript
 ## Pre-commit
 
 ```yaml
+- repo: https://github.com/OWNER/noinlinedscript
+  rev: v0.1.0
+  hooks:
+    - id: noinlinedscript
+```
+
+During a transition period, add `args: [--warn]` to report without blocking:
+
+```yaml
+    - id: noinlinedscript
+      args: [--warn]
+```
+
+For local development without a remote repo:
+
+```yaml
 - repo: local
   hooks:
     - id: noinlinedscript

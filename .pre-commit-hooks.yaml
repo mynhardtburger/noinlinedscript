@@ -1,0 +1,7 @@
+- id: noinlinedscript
+  name: no-inlined-script
+  description: Detect inlined shell/python scripts
+  entry: noinlinedscript
+  language: python
+  files: '(Jenkinsfile.*|\.sh)$'
+  types: [text]
