@@ -23,6 +23,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-score", type=float, default=None, help="Override max complexity score threshold")
     parser.add_argument("--config", type=str, default=None, help="Path to config file")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show all blocks, not just violations")
+    parser.add_argument("--warn", "-w", action="store_true", help="Report violations but always exit 0")
     parser.add_argument("--jenkinsfiles-only", action="store_true", help="Only check Jenkinsfiles")
     parser.add_argument("--shellscripts-only", action="store_true", help="Only check shell scripts")
 
@@ -37,6 +38,8 @@ def main(argv: list[str] | None = None) -> int:
         config.json_output = True
     if args.verbose:
         config.verbose = True
+    if args.warn:
+        config.warn = True
 
     files = args.files if args.files else _discover_files()
 
@@ -63,6 +66,8 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print(format_text(results, config, verbose=config.verbose))
 
+    if config.warn:
+        return 0
     violations = [r for r in results if is_violation(r, config)]
     return 1 if violations else 0
 

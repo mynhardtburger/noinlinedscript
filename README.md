@@ -48,6 +48,7 @@ noinlinedscript
 
 | Flag | Description |
 |------|-------------|
+| `--warn`, `-w` | Report violations but always exit 0 (for transition periods) |
 | `--json` | JSON output instead of human-readable |
 | `--verbose`, `-v` | Show all blocks, not just violations |
 | `--max-lines N` | Override max line count threshold (default: 5) |

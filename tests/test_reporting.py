@@ -67,6 +67,15 @@ class TestFormatText:
         assert "ok" in text
 
 
+    def test_warn_mode_uses_warning_marker(self):
+        source = "\n".join(f"echo line{i}" for i in range(10))
+        result = _make_analyzed(source)
+        config = ToolConfig(max_line_count=5, warn=True)
+        text = format_text([result], config)
+        assert "WARNING" in text
+        assert "VIOLATION" not in text
+
+
 class TestFormatJson:
     def test_valid_json(self):
         result = _make_analyzed("echo hello")

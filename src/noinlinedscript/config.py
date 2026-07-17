@@ -21,6 +21,7 @@ class ToolConfig:
     exclude_patterns: list[str] = field(default_factory=list)
     json_output: bool = False
     verbose: bool = False
+    warn: bool = False
 
     def is_allowed(self, file_path: str, start_line: int) -> bool:
         for entry in self.allowlist:

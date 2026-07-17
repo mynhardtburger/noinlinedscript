@@ -30,7 +30,10 @@ def format_text(results: list[AnalyzedBlock], config: ToolConfig, verbose: bool 
         ctx = _context_label(item)
         style = b.block_style.value if b.block_style else "unknown"
 
-        marker = "VIOLATION" if violation else "ok"
+        if violation:
+            marker = "WARNING" if config.warn else "VIOLATION"
+        else:
+            marker = "ok"
         lines.append(f"{rel_path}:{b.start_line}-{b.end_line}  [{ctx}]  {style}  ({marker})")
         lines.append(f"  Lines: {c.line_count}  Score: {c.complexity_score:.1f}")
 
@@ -139,6 +142,7 @@ def format_json(results: list[AnalyzedBlock], config: ToolConfig) -> str:
         "config": {
             "max_line_count": config.max_line_count,
             "max_complexity_score": config.max_complexity_score,
+            "warn": config.warn,
         },
     }
 

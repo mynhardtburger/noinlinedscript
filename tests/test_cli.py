@@ -40,6 +40,23 @@ class TestCli:
         assert result == 0
 
 
+class TestWarnMode:
+    def test_warn_exits_zero_with_violations(self, jenkinsfile_fixtures):
+        result = main([str(jenkinsfile_fixtures / "Jenkinsfile.triple_double_quote"), "--warn"])
+        assert result == 0
+
+    def test_warn_still_prints_report(self, jenkinsfile_fixtures, capsys):
+        main([str(jenkinsfile_fixtures / "Jenkinsfile.triple_double_quote"), "--warn"])
+        captured = capsys.readouterr()
+        assert "WARNING" in captured.out
+        assert "exceed thresholds" in captured.out
+
+    def test_warn_with_verbose(self, jenkinsfile_fixtures, capsys):
+        main([str(jenkinsfile_fixtures / "Jenkinsfile.single_line"), "--warn", "--verbose"])
+        captured = capsys.readouterr()
+        assert "ok" in captured.out
+
+
 class TestFileDiscovery:
     def test_discovers_jenkinsfiles_and_sh(self, tmp_path, monkeypatch):
         (tmp_path / "Jenkinsfile.test").write_text("pipeline {}\n")
