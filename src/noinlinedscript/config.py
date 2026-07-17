@@ -23,6 +23,7 @@ class ToolConfig:
     verbose: bool = False
     warn: bool = False
     no_summary: bool = False
+    guidance: str = "To resolve, extract inlined code into standalone script files."
 
     def is_allowed(self, file_path: str, start_line: int) -> bool:
         for entry in self.allowlist:

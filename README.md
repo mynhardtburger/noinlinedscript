@@ -71,6 +71,7 @@ For local development without a remote repo:
 | `--max-lines N` | Override max line count threshold (default: 5) |
 | `--max-score N` | Override max complexity score threshold (default: 10.0) |
 | `--config PATH` | Path to config file (default: nearest `pyproject.toml`) |
+| `--guidance TEXT` | Override the remediation guidance text |
 | `--jenkinsfiles-only` | Only check Jenkinsfiles |
 | `--shellscripts-only` | Only check shell scripts |
 

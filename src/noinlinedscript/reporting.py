@@ -76,6 +76,10 @@ def format_text(results: list[AnalyzedBlock], config: ToolConfig, verbose: bool 
         lines.append(f"Summary: {total} inline blocks found, {violation_count} exceed thresholds")
         lines.append(f"  Thresholds: max_line_count={config.max_line_count}, max_complexity_score={config.max_complexity_score}")
 
+    if violations and config.guidance:
+        lines.append("")
+        lines.append(config.guidance)
+
     return "\n".join(lines)
 
 
@@ -141,6 +145,8 @@ def format_json(results: list[AnalyzedBlock], config: ToolConfig) -> str:
             "total_blocks": len(results),
             "violations": len(violations),
         }
+    if violations and config.guidance:
+        output["guidance"] = config.guidance
 
     return json.dumps(output, indent=2)
 

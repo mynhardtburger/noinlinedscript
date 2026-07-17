@@ -25,6 +25,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--verbose", "-v", action="store_true", help="Show all blocks, not just violations")
     parser.add_argument("--warn", "-w", action="store_true", help="Report violations but always exit 0")
     parser.add_argument("--no-summary", action="store_true", help="Suppress the summary line")
+    parser.add_argument("--guidance", type=str, default=None, help="Override the remediation guidance text")
     parser.add_argument("--jenkinsfiles-only", action="store_true", help="Only check Jenkinsfiles")
     parser.add_argument("--shellscripts-only", action="store_true", help="Only check shell scripts")
 
@@ -43,6 +44,8 @@ def main(argv: list[str] | None = None) -> int:
         config.warn = True
     if args.no_summary:
         config.no_summary = True
+    if args.guidance is not None:
+        config.guidance = args.guidance
 
     files = args.files if args.files else _discover_files()
 

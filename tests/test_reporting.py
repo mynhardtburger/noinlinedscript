@@ -74,6 +74,26 @@ class TestFormatText:
         assert "WARNING" in text
         assert "VIOLATION" not in text
 
+    def test_guidance_shown_on_violations(self):
+        source = "\n".join(f"echo line{i}" for i in range(10))
+        result = _make_analyzed(source)
+        config = ToolConfig(max_line_count=5)
+        text = format_text([result], config)
+        assert "extract inlined code" in text
+
+    def test_guidance_absent_when_clean(self):
+        result = _make_analyzed("echo hello")
+        config = ToolConfig()
+        text = format_text([result], config)
+        assert "extract" not in text
+
+    def test_custom_guidance(self):
+        source = "\n".join(f"echo line{i}" for i in range(10))
+        result = _make_analyzed(source)
+        config = ToolConfig(max_line_count=5, guidance="See CONTRIBUTING.md for details.")
+        text = format_text([result], config)
+        assert "CONTRIBUTING.md" in text
+
 
 class TestFormatJson:
     def test_valid_json(self):
