@@ -61,10 +61,11 @@ def main(argv: list[str] | None = None) -> int:
     results = [analyze_block(b) for b in all_blocks]
     results = _apply_excludes(results, config)
 
+    output_stream = sys.stderr if config.warn else sys.stdout
     if config.json_output:
-        print(format_json(results, config))
+        print(format_json(results, config), file=output_stream)
     else:
-        print(format_text(results, config, verbose=config.verbose))
+        print(format_text(results, config, verbose=config.verbose), file=output_stream)
 
     if config.warn:
         return 0

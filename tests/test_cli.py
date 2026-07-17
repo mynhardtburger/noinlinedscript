@@ -45,16 +45,16 @@ class TestWarnMode:
         result = main([str(jenkinsfile_fixtures / "Jenkinsfile.triple_double_quote"), "--warn"])
         assert result == 0
 
-    def test_warn_still_prints_report(self, jenkinsfile_fixtures, capsys):
+    def test_warn_prints_to_stderr(self, jenkinsfile_fixtures, capsys):
         main([str(jenkinsfile_fixtures / "Jenkinsfile.triple_double_quote"), "--warn"])
         captured = capsys.readouterr()
-        assert "WARNING" in captured.out
-        assert "exceed thresholds" in captured.out
+        assert "WARNING" in captured.err
+        assert "exceed thresholds" in captured.err
 
     def test_warn_with_verbose(self, jenkinsfile_fixtures, capsys):
         main([str(jenkinsfile_fixtures / "Jenkinsfile.single_line"), "--warn", "--verbose"])
         captured = capsys.readouterr()
-        assert "ok" in captured.out
+        assert "ok" in captured.err
 
 
 class TestFileDiscovery:
